@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-
+﻿
 int manticoreHealth = 10;
 int cityHealth = 15;
 int currentRound = 1;
@@ -8,39 +6,44 @@ int currentRound = 1;
 
 int chosenNumber = AskForNumberInRange("Pilot, how far do you want to place the Manticore?", 0, 100);
 Console.Clear();
-
-Console.WriteLine("Guess the placement, between 0 and 100");
+Console.ForegroundColor = ConsoleColor.White;
+Console.WriteLine("It's your time to guess the placement of the Manticore.");
 
 while (manticoreHealth > 0 && cityHealth > 0)
 {
     Console.WriteLine("=================================================================");
-    Console.WriteLine($"STATUS: Round: {int currentRound = TheCurrentRound} City: {cityHealth}/15 Manticore: {manticoreHealth} / 10");
-    Console.WriteLine($"The cannon is expected to deal {currentDamage} this round.");
+    StatusBar(currentRound, cityHealth, manticoreHealth);
+
+    int currentDamage = CurrentRoundDamage(currentRound);
+    Console.WriteLine($"The cannon is expected to deal {currentDamage} damage this round.");
     int guessedNumber = AskForNumber("Enter desired cannon range: ");
     if (guessedNumber > chosenNumber) Console.WriteLine("That shot went too far!");
     else if (guessedNumber < chosenNumber) Console.WriteLine($"That shot went too close!");
-    else if (guessedNumber == chosenNumber) Console.WriteLine("You shot the Manticore!");
+    else if (guessedNumber == chosenNumber) Console.WriteLine("You hit the Manticore!");
+
+        if (guessedNumber == chosenNumber) manticoreHealth -= currentDamage;
+
+    if (manticoreHealth > 0) cityHealth--;
+    if (manticoreHealth == 0) Console.WriteLine("Die bitch");
+    currentRound++;
 }
 
-
-/*
-while (true)
+if (cityHealth == 0)
 {
-    int guessedNumber = AskForNumber("What's your next guess? ");
-    if (guessedNumber > chosenNumber) Console.WriteLine($"{guessedNumber} is too high");
-    else if (guessedNumber < chosenNumber) Console.WriteLine($"{guessedNumber} is too low");
-    else break;
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("You were not able to save the city. Consolas vanquished.");
 }
-Console.WriteLine("You guessed the right number!");
-*/
+if (cityHealth > 0)
+{
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("You destroyed the Manticore. Congratulations!");
+}
 
 //=================
 //=====Methods=====
 //=================
-
-void statusBar
-
-GCNotificationStatus
 
 int AskForNumber(string text)
 {
@@ -59,4 +62,27 @@ int AskForNumberInRange(string text, int min, int max)
     }
 }
 
+void StatusBar(int currentRound, int cityHealth, int manticoreHealth)
+{
+    Console.WriteLine($"STATUS: Round: {currentRound} City: {cityHealth}/15 Manticore: {manticoreHealth}/10");
+}
 
+int CurrentRoundDamage(int currentRound)
+{
+    if (currentRound % 5 == 0 && currentRound % 3 == 0)
+        {
+        return 10;
+        }
+     else if (currentRound % 5 == 0)
+        {
+        return 3;
+        }
+     else if (currentRound % 3 == 0)
+        {
+        return 3;
+        }
+     else
+        {
+        return 1;
+        }
+}
