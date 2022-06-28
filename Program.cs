@@ -17,11 +17,13 @@ while (manticoreHealth > 0 && cityHealth > 0)
 
     int guessedNumber = AskForNumber("Enter desired cannon range: ");
     HitChecker(guessedNumber, chosenNumber, currentDamage);
-    ManticoreAttack(cityHealth--);
+
+    cityHealth--;
     currentRound++;
 }
-
 WinnerOrLoser(cityHealth);
+
+
 
 
 //=================
@@ -42,14 +44,6 @@ void WinnerOrLoser(int cityHealth)
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("You destroyed the Manticore and saved Consolas. Congratulations!");
         Console.ReadLine();
-    }
-}
-
-void ManticoreAttack(int cityHealth)
-{
-    if (manticoreHealth > 0)
-    {
-        cityHealth--;
     }
 }
 
