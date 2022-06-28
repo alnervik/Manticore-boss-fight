@@ -16,10 +16,9 @@ while (manticoreHealth > 0 && cityHealth > 0)
     Console.WriteLine($"The cannon is expected to deal {currentDamage} damage this round.");
 
     int guessedNumber = AskForNumber("Enter desired cannon range: ");
-    HitChecker(guessedNumber, chosenNumber);
-    if (guessedNumber == chosenNumber) manticoreHealth -= currentDamage;
-
-    ManticoreAttack(manticoreHealth, cityHealth);
+    HitChecker(guessedNumber, chosenNumber, currentDamage);
+    ManticoreAttack(cityHealth--);
+    currentRound++;
 }
 
 WinnerOrLoser(cityHealth);
@@ -28,12 +27,6 @@ WinnerOrLoser(cityHealth);
 //=================
 //=====Methods=====
 //=================
-static void ManticoreAttack(int manticoreHealth, int cityHealth)
-{
-    if (manticoreHealth > 0) cityHealth--;
-  
-}
-
 void WinnerOrLoser(int cityHealth)
 {
     if (cityHealth == 0)
@@ -52,11 +45,23 @@ void WinnerOrLoser(int cityHealth)
     }
 }
 
-void HitChecker(int guessedNumber, int chosenNumber)
+void ManticoreAttack(int cityHealth)
+{
+    if (manticoreHealth > 0)
+    {
+        cityHealth--;
+    }
+}
+
+void HitChecker(int guessedNumber, int chosenNumber, int currentDamage)
 {
     if (guessedNumber > chosenNumber) Console.WriteLine("That shot went too far!");
     else if (guessedNumber < chosenNumber) Console.WriteLine($"That shot went too close!");
-    else if (guessedNumber == chosenNumber) Console.WriteLine("You hit the Manticore!");
+    else if (guessedNumber == chosenNumber)
+    {
+        Console.WriteLine("You hit the Manticore!");
+        manticoreHealth -= currentDamage;
+    }
 }
 
 int AskForNumber(string text)
