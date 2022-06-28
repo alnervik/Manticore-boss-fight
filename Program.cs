@@ -4,46 +4,60 @@ int cityHealth = 15;
 int currentRound = 1;
 
 
-int chosenNumber = AskForNumberInRange("Pilot, how far do you want to place the Manticore?", 0, 100);
+int chosenNumber = AskForNumberInRange("Pilot, how far do you want to place the Manticore? ");
 Console.Clear();
-Console.ForegroundColor = ConsoleColor.White;
 Console.WriteLine("It's your time to guess the placement of the Manticore.");
 
 while (manticoreHealth > 0 && cityHealth > 0)
 {
-    Console.WriteLine("=================================================================");
     StatusBar(currentRound, cityHealth, manticoreHealth);
 
     int currentDamage = CurrentRoundDamage(currentRound);
     Console.WriteLine($"The cannon is expected to deal {currentDamage} damage this round.");
+
     int guessedNumber = AskForNumber("Enter desired cannon range: ");
-    if (guessedNumber > chosenNumber) Console.WriteLine("That shot went too far!");
-    else if (guessedNumber < chosenNumber) Console.WriteLine($"That shot went too close!");
-    else if (guessedNumber == chosenNumber) Console.WriteLine("You hit the Manticore!");
+    HitChecker(guessedNumber, chosenNumber);
+    if (guessedNumber == chosenNumber) manticoreHealth -= currentDamage;
 
-        if (guessedNumber == chosenNumber) manticoreHealth -= currentDamage;
-
-    if (manticoreHealth > 0) cityHealth--;
-    if (manticoreHealth == 0) Console.WriteLine("Die bitch");
-    currentRound++;
+    ManticoreAttack(manticoreHealth, cityHealth);
 }
 
-if (cityHealth == 0)
-{
-    Console.Clear();
-    Console.ForegroundColor = ConsoleColor.Red;
-    Console.WriteLine("You were not able to save the city. Consolas vanquished.");
-}
-if (cityHealth > 0)
-{
-    Console.Clear();
-    Console.ForegroundColor = ConsoleColor.Green;
-    Console.WriteLine("You destroyed the Manticore. Congratulations!");
-}
+WinnerOrLoser(cityHealth);
+
 
 //=================
 //=====Methods=====
 //=================
+static void ManticoreAttack(int manticoreHealth, int cityHealth)
+{
+    if (manticoreHealth > 0) cityHealth--;
+  
+}
+
+void WinnerOrLoser(int cityHealth)
+{
+    if (cityHealth == 0)
+    {
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("You were not able to save the city. Consolas vanquished.");
+        Console.ReadLine();
+    }
+    if (cityHealth > 0)
+    {
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("You destroyed the Manticore and saved Consolas. Congratulations!");
+        Console.ReadLine();
+    }
+}
+
+void HitChecker(int guessedNumber, int chosenNumber)
+{
+    if (guessedNumber > chosenNumber) Console.WriteLine("That shot went too far!");
+    else if (guessedNumber < chosenNumber) Console.WriteLine($"That shot went too close!");
+    else if (guessedNumber == chosenNumber) Console.WriteLine("You hit the Manticore!");
+}
 
 int AskForNumber(string text)
 {
@@ -52,19 +66,21 @@ int AskForNumber(string text)
     return guessingNumber;
 }
 
-int AskForNumberInRange(string text, int min, int max)
+int AskForNumberInRange(string text)
 {
     while (true)
     {
         int chosenNumber = AskForNumber(text);
-        if (chosenNumber >= min && chosenNumber <= max)
+        if (chosenNumber >= 0 && chosenNumber <= 100)
             return chosenNumber;
     }
 }
 
 void StatusBar(int currentRound, int cityHealth, int manticoreHealth)
 {
-    Console.WriteLine($"STATUS: Round: {currentRound} City: {cityHealth}/15 Manticore: {manticoreHealth}/10");
+    Console.WriteLine(" ");
+    Console.WriteLine("=================================================================");
+    Console.WriteLine($"STATUS: Round: { currentRound } City: { cityHealth }/15 Manticore: { manticoreHealth }/10");
 }
 
 int CurrentRoundDamage(int currentRound)
